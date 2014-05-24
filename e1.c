@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #define MAX_SEQUENCE 10
 
@@ -19,8 +20,10 @@ int main(int argc, char const *argv[])
 	int segment_id = shmget(IPC_PRIVATE,sizeof(shdat),S_IRUSR | S_IWUSR);
 	char *shmaddr = (char*)shmat(segment_id,NULL,0);
 	int sq_size;
-	scanf("%d",sq_size);
-	sprintf(shdat.sequence_size,sq_size);
+
+	scanf("%d",&shdat.sequence_size);
+	// printf("%d\n", sq_size);
+	// sprintf(&shdat.sequence_size,&sq_size);
 	int pid;
 
 	pid = fork();
@@ -35,9 +38,10 @@ int main(int argc, char const *argv[])
 			shdat.fib_sequence[i] = prev + succ;
 			prev = succ;
 			succ = shdat.fib_sequence[i];
+			printf("%d\n",shdat.fib_sequence[i] );
 		}
 		i = 0;
-		shmdt(shmaddr);
+//		shmdt(shmaddr);
 		return 0;
 
 	}
@@ -48,9 +52,10 @@ int main(int argc, char const *argv[])
 		fib_count = shdat.sequence_size;
 		int i;
 		for(i = 0; i< fib_count;i++){
-			printf("%d\t", shdat.fib_sequence[fib_count]);
+			printf("%d\t", shdat.fib_sequence[i]);
 		}
-		shmclt(segment_id,IPC_RMID,NULL);
+		shmdt(shmaddr);
+		shmctl(segment_id,IPC_RMID,NULL);
 	}
 
 
