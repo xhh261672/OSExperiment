@@ -23,7 +23,12 @@ int main(int argc, char const *argv[])
 
 	shdat = (share_data *)shmaddr;
 
+	printf("%s\n","input your sequence size\(no more than 10\):  " );
 	scanf("%d",&(shdat->sequence_size));
+	if(shdat->sequence_size > MAX_SEQUENCE){
+		printf("%s\n","your sequence size is too large" );
+		return  0;
+	}
 	// printf("%d\n", sq_size);
 	// sprintf(&shdat.sequence_size,&sq_size);
 	int pid;
@@ -40,7 +45,7 @@ int main(int argc, char const *argv[])
 			shdat->fib_sequence[i] = prev + succ;
 			prev = succ;
 			succ = shdat->fib_sequence[i];
-			printf("%d\n",shdat->fib_sequence[i] );
+			// printf("%d\n",shdat->fib_sequence[i] );
 		}
 		i = 0;
 //		shmdt(shmaddr);
